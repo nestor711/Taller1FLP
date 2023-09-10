@@ -1,5 +1,5 @@
 #lang eopl
-#lang racket
+
 
 (define (list-index P L)
   (cond ((null? L) #f)
