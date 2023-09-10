@@ -1,4 +1,3 @@
-#lang racket
 #lang eopl
 
 ;; down :
@@ -9,12 +8,13 @@
 ;;<element> ::= <atom> | <list>
 ;;<atom> ::= cualquier átomo (número, símbolo, etc.)
 
-(define (down L) ; Se define la función down con argumento una lista L
-  (cond 
-    [(empty? L) '()]           ; Si la lista es vacía, retorna una lista vacía.
-    [else (cons (list (car L)) ; Crea una lista con el primer elemento de L.
-                (down (cdr L))) ; Llama a down recursivamente con el resto de la lista.
-          ]))
+(define (down L)
+  (cond
+    ((null? L) '())   ; Caso base: si la lista es vacía, retornar una lista vacía
+    ((list? (car L))  ; Si el primer elemento es una lista, procesarla recursivamente
+     (cons (down (car L)) (down (cdr L))))
+    (else             ; Si el primer elemento no es una lista, agregar paréntesis
+     (cons (list (car L)) (down (cdr L))))))
 
 ;; Pruebas
 ;; > (down ’(1 2 3))
