@@ -4,8 +4,9 @@
 ;; Proposito:
 ;; down L -> Lista Función que debe retornar una lista con cada elemento de L asociado a un nivel más de paréntesis comparado con su estado original en L.
 ;;
-;;<lista> := ()
-;; := (<valor-de-scheme> <lista>)
+;;<list> ::= '() | <element> <list>
+;;<element> ::= <atom> | <list>
+;;<atom> ::= cualquier átomo (número, símbolo, etc.)
 
 (define (down L) ; Se define la función down con argumento una lista L
   (cond 
