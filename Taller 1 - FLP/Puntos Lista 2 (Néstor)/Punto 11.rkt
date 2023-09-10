@@ -1,5 +1,4 @@
 #lang eopl
-#lang racket
 
 ;; zip :
 ;; Proposito:
