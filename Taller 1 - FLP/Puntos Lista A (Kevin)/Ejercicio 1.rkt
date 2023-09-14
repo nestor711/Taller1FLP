@@ -6,6 +6,7 @@
 ;; invert L -> la función recibe una lista, debe retornar la misma lista con sus elementos
 ;;             invertidos.
 ;;
+;; Gramática BNF
 ;; <list_par> ::= '() | (<par> <lista_par>) | <par>
 ;; <par> ::= (<elemento 1> <elemento 2>)
 ;; <elemento 1> ::= <lista>
