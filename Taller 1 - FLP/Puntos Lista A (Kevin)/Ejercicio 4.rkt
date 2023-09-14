@@ -4,7 +4,6 @@
 ;; Función filter-in :
 ;; Proposito:
 ;; filter-in P L -> la función recibe un predicado P y una lista L, la función debe retornar los elementos de L que cumplen el predicado P
-;;             invertidos.
 ;;
 ;; Gramática BNF
 ;; <filter-in> ::= <filter-in> <(<predicado>, <lista>)>
