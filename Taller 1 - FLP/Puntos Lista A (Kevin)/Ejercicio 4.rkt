@@ -11,6 +11,7 @@
 ;; <lista> ::= <elemento> | <lista> <elemento> | '()
 ;; <elemento> ::= <int> | <symbol> | <lista>
 
+
 (define filter-in
   (lambda (P l) ; se recibe un predicado P y una lista L
     (if (null? l) '(); si la lista es vacía se retorna una lista vacía, de modo que no habrá ningún elemento que cumpla con el predicado P
