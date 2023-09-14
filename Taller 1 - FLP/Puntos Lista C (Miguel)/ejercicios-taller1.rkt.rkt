@@ -10,6 +10,38 @@
 ;Nestor David Heredia Gutierrez
 ;nestor.heredia@correounivalle.edu.co
 
+;punto 1
+
+
+;; Función invert :
+;; Proposito:
+;; invert L -> la función recibe una lista, debe retornar la misma lista con sus elementos
+;;             invertidos.
+;;
+;; Gramática BNF
+;; <list_par> ::= '() | (<par> <lista_par>) | <par>
+;; <par> ::= (<elemento 1> <elemento 2>)
+;; <elemento 1> ::= <lista>
+;; <elemento 2> ::= <lista>
+;; <lista> ::= <elemento> | <elemento> <lista>
+;; <elemento> ::= <int> | <symbol> 
+
+(define invert
+  (lambda (l) ;recibe una lista
+    (cond ((null? l) '()) ;si la lista es vacía retorna una lista vacía
+        (else (cons (list (cadr (car l)) (car (car l))) ;se construye una nueva lista con el primer par de la lista, se toma el resto del primer par como primer elemento y el segundo elemento será la cabeza del primer par.
+                    (invert (cdr l))))))); el resto de los pares se envía de forma recursiva para analizar los isguientes pares de la lista
+
+
+;; Pruebas
+;; >  (invert '((a 1) (a 2) (1 b) (2 b)))
+;;    ((1 a) (2 a) (b 1) (b 2))
+
+;; > (invert '((5 9) (10 91) (82 7) (a e) ("hola" "Mundo")))
+;;   ((9 5) (91 10) (7 82) (e a) ("Mundo" "hola"))
+
+;; >  (invert '(("es" "racket") ("genial" "muy") (17 29) (81 o)))
+;;    (("racket" "es") ("muy" "genial") (29 17) (o 81))
 
 
 
@@ -50,11 +82,11 @@
 
 
 ;; Pruebas
-;; > (down ’(1 2 3))
+;; > (down '(1 2 3))
 ;;((1) (2) (3))
-;;> (down ’((una) (buena) (idea)))
+;;> (down '((una) (buena) (idea)))
 ;;(((una)) ((buena)) ((idea)))
-;;> (down ’(un (objeto (mas)) complicado))
+;;> (down '(un (objeto (mas)) complicado))
 ;;((un) ((objeto (mas))) (complicado))
 
 
@@ -87,6 +119,41 @@
 ;(a b (1 2) d)
 ;> (list-set '(a b c d) 3 '(1 5 10))
 ;(a b c (1 5 10))
+
+
+;punto 4
+
+
+;; Función filter-in :
+;; Proposito:
+;; filter-in P L -> la función recibe un predicado P y una lista L, la función debe retornar los elementos de L que cumplen el predicado P
+;;
+;; Gramática BNF
+;; <filter-in> ::= <filter-in> <(<predicado>, <lista>)>
+;; <predicado> ::= <expresión lógica> | " "
+;; <lista> ::= <elemento> | <lista> <elemento> | '()
+;; <elemento> ::= <int> | <symbol> | <lista>
+
+
+(define filter-in
+  (lambda (P l) ; se recibe un predicado P y una lista L
+    (if (null? l) '(); si la lista es vacía se retorna una lista vacía, de modo que no habrá ningún elemento que cumpla con el predicado P
+        (if (P (car l)); si el primer elemento de la lista cumple con el predicado P
+            (cons (car l) (filter-in P (cdr l))) ; #t: se construye una nueva lista con el primer elemento y se llama recursivamente a la función filter-in con el resto de los elementos de la lista L
+            (filter-in P (cdr l)))))) ; #f: en caso de que el primer elemento no cumpla con el predicado P, se pasa recursivamente como predicado el resto de la lista a la función filter-in
+
+;;Pruebas
+
+;; > (filter-in number? '(a 2 (1 3) b 7))
+;;   (2 7)
+
+;; > (filter-in symbol? '(a (b c) 17 foo))
+;;   (a foo)
+
+;; > (filter-in string? '(a b u "univalle" "racket" "flp" 28 90 (1 2 3)))
+;;   ("univalle" "racket" "flp")
+
+
 
 
 
@@ -165,6 +232,53 @@
 ;(x x y x y x y y x)
 
 
+;punto 7
+
+
+;; Ejercicio 7
+;; cartesian-product:
+;; Propósito:
+;; cartesina-product L1 L2 -> la función recibe dos listas L1 y L2 en el que sus elementos internos no se repitan, la función debe retornar tuplas con la combinación (producto cartesiano) de los elementos la lista L1 con los elementos de la lista L2, el orden de las tuplas no tienen importancia
+;;
+;; Gramática BNF
+;; <cartesian-product> ::= <cartesian-product> <(<list1>, <list2>)>
+;; <list1> ::= <symbol> | <symbol> <list1>
+;; <list2> ::= <symbol> | <symbol> <list2>
+;; <symbol> ::= {<symbol>} (cadena de simbolos en el que ningún símbolo aparece más de una vez)
+
+
+(define (cartesian-product L1 L2)
+  (define (combinar x l)
+    (Map-Func (lambda (y) (list x y)) l))
+  (cond
+    ((null? L1) '()) ; Caso base: Si L1 es vacía, se retorna una lista vacía
+    (else
+      (Append-Func (combinar (car L1) L2)
+              (cartesian-product (cdr L1) L2))))) ; Llamada recursiva con el resto de L1 y L2
+
+(define (Map-Func P l)
+  (if (null? l) '()
+      (cons (P (car l)) (Map-Func P (cdr l)))))
+
+;; concatena : any any -> any
+;; Concatena dos listas.
+(define (Append-Func l1 l2)
+  (if (null? l1)
+      l2
+      (cons (car l1) (Append-Func (cdr l1) l2))))
+
+;; Pruebas
+;; > (cartesian-product '(a b c) '(x y))
+;;   ((a x) (a y) (b x) (b y) (c x) (c y))
+
+;; > (cartesian-product '(p q r) '(5 6 7))
+;;   ((p 5) (p 6) (p 7) (q 5) (q 6) (q 7) (r 5) (r 6) (r 7))
+
+
+
+
+
+
 
 
 ;punto 8
@@ -210,10 +324,6 @@
 
 
 
-
-
-
-
 ;;punto numero 9
 
 
@@ -252,6 +362,41 @@
 ;0
 ;(inversions '(3 2 1))
 ;3
+
+
+
+;; Ejercicio 10
+
+
+;; up:
+;; Propósito:
+;; up L-> la función recibe una lista L, la función retorna una nueva lista en el que se haya eliminado los paréntesis anidados, de modo que al final la lista retornada solo tenga los elementos de la lista enviada como parámetro.
+;;
+;; Gramática BNF
+;; <lista> ::= (<elementos>) | '()
+;; <elementos> ::= <elemento> | <elemento> <elementos>
+;; <elemento> ::= <lista> | <valor>
+;; <valor> ::= <int> | <symbol> | <boolean> | <lista>
+
+
+;; up : any -> any
+;; Remueve un par de paréntesis a cada elemento del nivel más alto de la lista.
+(define (up l)
+  (cond
+    ((null? l) '()) ; Caso base: si la lista está vacía, devuelve una lista vacía.
+    ((pair? (car l)) ; Si el primer elemento de la lista es una lista
+     (Append-Func (car l) (up (cdr l)))) ; Utiliza la función "concatena" para concatenar el primer elemento (lista) con la llamada recursiva a "usp" en la cola de la lista.
+    (else (cons (car l) (up (cdr l)))))) ; Si el primer elemento no es una lista, mantenerlo y llamar recursivamente a "usp" en la cola de la lista.
+
+
+;; Pruebas
+;; >  (up '((1 2) (3 4)))
+;;    (1 2 3 4)
+
+;; >  (up '((x (y)) z))
+;;    (x (y) z)
+
+
 
 
 
@@ -331,6 +476,40 @@
 
 
 
+;punto 13
+
+
+;; up:
+;; Propósito:
+;; up L-> la función recibe una lista L, la función retorna una nueva lista en el que se haya eliminado los paréntesis anidados, de modo que al final la lista retornada solo tenga los elementos de la lista enviada como parámetro.
+;;
+;; Gramática BNF
+;; <lista> ::= (<elementos>) | '()
+;; <elementos> ::= <elemento> | <elemento> <elementos>
+;; <elemento> ::= <lista> | <valor>
+;; <valor> ::= <int> | <symbol> | <boolean> | <lista>
+
+(define (operate lrators lrands)
+  (define (aplicar_operador operador operador1 operador2)
+    (operador operador1 operador2))
+  
+  (let operadores ((operators lrators)
+             (operands lrands))
+    (if (null? operators)
+        (car operands)
+        (operadores (cdr operators)
+              (cons (aplicar_operador (car operators) (car operands) (cadr operands))
+                    (cddr operands))))))
+
+;; Pruebas
+;; >  (operate (list + * + - *) '(1 2 8 4 11 6))
+;;    102
+
+;; >  (operate (list *) '(4 5))
+;;    20
+
+
+
 
 ;punto 14
 
@@ -404,14 +583,64 @@
 
 
 ;pruebas dadas en el taller
-;(display (count-odd-and-even '(14 (7 () (12 () ()))
+; (count-odd-and-even '(14 (7 () (12 () ()))
 ;                               (26 (20 (17 () ()) ())
-;                               (31 () ())))))
+;                               (31 () ()))))
 ;
-;(display (count-odd-and-even '(14 (7 () (12 () ()))(26 (20 (17 () ()) ())(31 () ())))))
+;(count-odd-and-even '(14 (7 () (12 () ()))(26 (20 (17 () ()) ())(31 () ()))))
 ;
 ; Debería imprimir (4 3)
 
+
+
+
+
+;punto 16
+
+
+;; Gramática BNF
+;; <OperacionB>::= <int>
+;;             ::= (<OperacionB> ’suma <OperacionB>)
+;;             ::= (<OperacionB> ’resta <OperacionB>)
+;;             ::= (<OperacionB> ’multiplica <OperacionB>)
+
+;; Operar-binarias: operacionB -> number o 'operacion-no-valida
+;; Calcula el resultado de una operación binaria representada como una lista
+;; que sigue una gramática específica.
+;;
+;; operacionB: La operación binaria representada como una lista en la gramática:
+;; Un número entero.
+;; Una lista de la forma '(operando1 operador operando2)', donde:
+;; operando1 y operando2 son operaciones binarias válidas.
+;; operador es una de las siguientes palabras clave: 'suma', 'resta' o 'multiplica'.
+
+;; La función devuelve el resultado de la operación binaria o 'operacion-no-valida' si
+;; la entrada no sigue la gramática especificada o si la operación no es válida.
+
+
+(define (Operar-binarias operacionB)
+  (cond
+    ((number? operacionB) operacionB) ; Si es un número, retornamos el número mismo
+    ((pair? operacionB) ; Si es una lista
+     (let* ((op (cadr operacionB)) ; Extraemos la operación (suma, resta, multiplica)
+            (left (car operacionB)) ; Extraemos el operando izquierdo
+            (right (caddr operacionB))) ; Extraemos el operando derecho
+       (cond
+         ((eq? op 'suma) (+ (Operar-binarias left) (Operar-binarias right))) ; Si la operación es 'suma'
+         ((eq? op 'resta) (- (Operar-binarias left) (Operar-binarias right))) ; Si la operación es 'resta'
+         ((eq? op 'multiplica) (* (Operar-binarias left) (Operar-binarias right))) ; Si la operación es 'multiplica'
+         (else 'operacion-no-valida))) ; En caso de una operación no válida
+      )
+    (else 'operacion-no-valida))) ; En caso de que no sea un número ni una lista válida
+
+
+;; Ejemplos de uso
+;; (Operar-binarias 4) ; Debe mostrar 4
+;; (Operar-binarias '(2 suma 9)) ; Debe mostrar 11
+;; (Operar-binarias '(2 resta 9)) ; Debe mostrar -7
+;; (Operar-binarias '(2 multiplica 9)) ; Debe mostrar 18
+;; (Operar-binarias '((2 multiplica 3) suma (5 resta 1))) ; Debe mostrar 10
+;; (Operar-binarias '((2 multiplica (4 suma 1)) multiplica ((2 multiplica 4) resta 1))) ;Debe mostrar 70
 
 
 
